@@ -1536,38 +1536,20 @@
       return Math.floor(hrs / 24) + 'd ago';
     }
 
-    function parseXmlFeed(str, n) {
-      var xml = new DOMParser().parseFromString(str, 'text/xml');
-      if (xml.querySelector('parsererror')) throw new Error('parse error');
-      var els = xml.getElementsByTagName('item');
-      var out = [];
-      for (var i = 0; i < Math.min(els.length, n); i++) {
-        var el = els[i];
-        var g = function(t) { var x = el.getElementsByTagName(t)[0]; return x ? x.textContent.trim() : ''; };
-        var srcEl = el.getElementsByTagName('source')[0];
-        out.push({ title: g('title'), link: g('link') || g('guid'), pubDate: g('pubDate'), author: srcEl ? srcEl.textContent.trim() : '' });
-      }
-      if (!out.length) throw new Error('no items');
-      return out;
-    }
-    function fetchRss(feedUrl, n, onSuccess, onError) {
-      fetch('https://corsproxy.io/?' + encodeURIComponent(feedUrl))
-        .then(function(r) { if (!r.ok) throw new Error('http ' + r.status); return r.text(); })
-        .then(function(s) { onSuccess(parseXmlFeed(s, n)); })
-        .catch(function() {
-          fetch('https://api.allorigins.win/get?url=' + encodeURIComponent(feedUrl))
-            .then(function(r) { return r.json(); })
-            .then(function(d) { if (!d.contents) throw new Error('empty'); onSuccess(parseXmlFeed(d.contents, n)); })
-            .catch(onError);
-        });
-    }
     function loadFeed(tab) {
       if (cache[tab]) { renderItems(cache[tab]); return; }
       content.innerHTML = '<div style="display:flex;align-items:center;justify-content:center;padding:4rem 1rem;gap:0.75rem;"><div style="height:1.25rem;width:1.25rem;border-radius:50%;border:2px solid #0d7377;border-top-color:transparent;animation:spin 0.7s linear infinite;"></div><span style="font-size:0.875rem;color:var(--muted-foreground);">Loading news…</span></div>';
-      fetchRss(FEEDS[tab], 12,
-        function(items) { cache[tab] = items; renderItems(items); },
-        function() { content.innerHTML = '<div style="padding:3rem 1rem;text-align:center;"><p style="font-size:0.875rem;color:var(--muted-foreground);">Unable to load news right now.</p><button onclick="window._newsRetry()" style="margin-top:0.75rem;font-size:0.875rem;color:#0d7377;background:none;border:none;cursor:pointer;text-decoration:underline;">Try again</button></div>'; }
-      );
+      var url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEEDS[tab]) + '&count=12';
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.status !== 'ok' || !data.items) throw new Error('bad feed');
+          cache[tab] = data.items;
+          renderItems(data.items);
+        })
+        .catch(function() {
+          content.innerHTML = '<div style="padding:3rem 1rem;text-align:center;"><p style="font-size:0.875rem;color:var(--muted-foreground);">Unable to load news right now.</p><button onclick="window._newsRetry()" style="margin-top:0.75rem;font-size:0.875rem;color:#0d7377;background:none;border:none;cursor:pointer;text-decoration:underline;">Try again</button></div>';
+        });
     }
 
     window._newsRetry = function() {
@@ -1691,34 +1673,16 @@
     function loadFeed(tab) {
       if (cache[tab]) { renderItems(cache[tab]); return; }
       showLoading();
-      function tryFetch(url, asJson) {
-        return fetch(url).then(function(r) {
-          if (!r.ok) throw new Error('http');
-          return asJson ? r.json() : r.text();
-        });
-      }
-      function parseAndDeliver(str) {
-        var xml = new DOMParser().parseFromString(str, 'text/xml');
-        if (xml.querySelector('parsererror')) throw new Error('parse');
-        var els = xml.getElementsByTagName('item');
-        var items = [];
-        for (var i = 0; i < Math.min(els.length, 10); i++) {
-          var el = els[i];
-          var g = function(t) { var x = el.getElementsByTagName(t)[0]; return x ? x.textContent.trim() : ''; };
-          var srcEl = el.getElementsByTagName('source')[0];
-          items.push({ title: g('title'), link: g('link') || g('guid'), pubDate: g('pubDate'), author: srcEl ? srcEl.textContent.trim() : '' });
-        }
-        if (!items.length) throw new Error('empty');
-        cache[tab] = items;
-        if (activeTab === tab) renderItems(items);
-      }
-      tryFetch('https://corsproxy.io/?' + encodeURIComponent(FEEDS[tab]), false)
-        .then(function(s) { parseAndDeliver(s); })
-        .catch(function() {
-          tryFetch('https://api.allorigins.win/get?url=' + encodeURIComponent(FEEDS[tab]), true)
-            .then(function(d) { if (!d.contents) throw new Error('empty'); parseAndDeliver(d.contents); })
-            .catch(function() { showError(); });
-        });
+      var url = 'https://api.rss2json.com/v1/api.json?rss_url=' + encodeURIComponent(FEEDS[tab]) + '&count=10';
+      fetch(url)
+        .then(function(r) { return r.json(); })
+        .then(function(data) {
+          if (data.status === 'ok' && data.items) {
+            cache[tab] = data.items;
+            if (activeTab === tab) renderItems(data.items);
+          } else { showError(); }
+        })
+        .catch(function() { showError(); });
     }
 
     var heroWidget = heroContent.closest('.aspect-square');
