@@ -1,0 +1,12 @@
+{
+  "permissions": {
+    "allow": [
+      "WebSearch",
+      "WebFetch(domain:unsplash.com)",
+      "Bash(npm list *)",
+      "PowerShell(try { $xl = New-Object -ComObject Excel.Application; $xl.Quit\\(\\); \"Excel COM available\" } catch { \"No Excel COM: $_\" })",
+      "PowerShell(New-Item -ItemType Directory -Force -Path \"C:\\\\Users\\\\amukh\\\\OneDrive\\\\Desktop\\\\Website\\\\public\\\\calculators\\\\sheets\")",
+      "PowerShell(\"Created\")"
+    ]
+  }
+}

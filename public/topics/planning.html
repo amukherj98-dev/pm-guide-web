@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Project Planning & Definition | Project Management Made Practical</title>
+  <meta name="description" content="How to define and plan a project correctly - the Iron Triangle, 3 Yes's and a No, feasibility investigation, business case, and project charter for Irish charities and small businesses.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{primary:{DEFAULT:'#0d7377',foreground:'#ffffff'},background:'var(--background)',foreground:'var(--foreground)',card:'var(--card)',muted:'var(--muted)','muted-foreground':'var(--muted-foreground)',border:'var(--border)'}}}};</script>
+  <style>
+    :root{--background:#faf9f7;--foreground:#1a1a2e;--card:#ffffff;--muted:#f0efed;--muted-foreground:#64748b;--border:#e2e1df;}
+    .dark{--background:#0a0a0a;--foreground:#fafafa;--card:#18181b;--muted:#27272a;--muted-foreground:#a1a1aa;--border:#3f3f46;}
+    body{font-family:'Inter',system-ui,sans-serif;background-color:var(--background);color:var(--foreground);}
+    .btn-primary{background-color:#0d7377;color:white;padding:0.625rem 1.25rem;border-radius:0.5rem;font-weight:500;transition:all 0.2s;display:inline-block;}.btn-primary:hover{background-color:#0b6264;}
+    .card{background-color:var(--card);border:1px solid var(--border);border-radius:1rem;}
+    #topics-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--card);border:1px solid var(--border);border-radius:0.75rem;box-shadow:0 20px 40px -8px rgba(0,0,0,0.15);z-index:100;width:440px;padding:0.75rem;grid-template-columns:1fr 1fr;gap:0.25rem;}
+    #topics-panel.open{display:grid;}
+    .topics-link{display:flex;align-items:center;padding:0.6rem 0.875rem;border-radius:0.5rem;color:var(--foreground);text-decoration:none;font-size:0.875rem;font-weight:500;transition:background-color 0.15s,color 0.15s;white-space:nowrap;}
+    .topics-link:hover{background-color:var(--muted);color:#0d7377;}
+    #topics-btn[aria-expanded="true"] .topics-chevron{transform:rotate(180deg);}.topics-chevron{transition:transform 0.2s;}
+    .prose-content h2{font-size:1.5rem;font-weight:700;margin-top:2rem;margin-bottom:0.75rem;}
+    .prose-content h3{font-size:1.125rem;font-weight:600;margin-top:1.5rem;margin-bottom:0.5rem;}
+    .prose-content p{line-height:1.75;margin-bottom:1rem;color:var(--muted-foreground);}
+    .prose-content ul{list-style:disc;padding-left:1.5rem;margin-bottom:1rem;}
+    .prose-content li{line-height:1.75;margin-bottom:0.25rem;color:var(--muted-foreground);}
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="sticky top-0 z-50 w-full border-b bg-[var(--card)]/95 backdrop-blur" style="border-color:var(--border);">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <div class="flex lg:flex-1"><a href="../index.html" class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1566341013452-946caa457784?w=80&h=80&fit=crop&q=80" alt="PM" class="h-10 w-10 rounded-lg object-cover"><div class="hidden sm:block"><span class="text-lg font-semibold">Project Management</span><span class="block text-xs text-[var(--muted-foreground)]">Made Practical</span></div></a></div>
+      <div class="flex lg:hidden"><button type="button" id="mobile-menu-btn" class="inline-flex items-center justify-center rounded-md p-2.5"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg></button></div>
+      <div class="hidden lg:flex lg:items-center lg:gap-x-8">
+        <a href="../index.html" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Home</a>
+        <div class="relative"><button id="topics-btn" aria-haspopup="true" aria-expanded="false" aria-controls="topics-panel" class="flex items-center gap-1 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Topics<svg class="topics-chevron h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button><div id="topics-panel" role="menu"><a href="risk.html" class="topics-link">Risk Management</a><a href="leadership.html" class="topics-link">Leadership</a><a href="teams.html" class="topics-link">Teams</a><a href="ethics.html" class="topics-link">Ethics</a><a href="sustainability.html" class="topics-link">Sustainability</a><a href="governance.html" class="topics-link">Governance</a><a href="strategy.html" class="topics-link">Strategy</a><a href="planning.html" class="topics-link">Planning</a><a href="implementation.html" class="topics-link">Implementation</a><a href="stakeholders.html" class="topics-link">Stakeholders</a><a href="methodologies.html" class="topics-link">Methodologies</a><a href="ai.html" class="topics-link">AI in Projects</a></div></div>
+        <a href="../index.html#resources" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Resources</a>
+        <a href="../index.html#values" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">ECCSR Framework</a>
+        <a href="../index.html#references" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">References</a>
+      </div>
+      <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-4"><button id="theme-toggle" class="p-2 rounded-lg hover:bg-[var(--muted)] transition-colors"><svg id="sun-icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg><svg id="moon-icon" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></button><a href="../index.html#get-started" class="btn-primary">Get Started</a></div>
+    </nav>
+    <div id="mobile-menu" class="hidden lg:hidden border-t px-6 py-4 space-y-3" style="border-color:var(--border);"><a href="../index.html" class="block text-sm font-medium py-2">Home</a><a href="planning.html" class="block text-sm py-1 text-[var(--muted-foreground)]">Planning</a><a href="risk.html" class="block text-sm py-1 text-[var(--muted-foreground)]">Risk Management</a></div>
+  </header>
+
+  <main>
+    <div class="bg-[var(--card)] border-b" style="border-color:var(--border);"><div class="mx-auto max-w-7xl px-6 py-3 lg:px-8"><nav class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]"><a href="../index.html" class="hover:text-[var(--foreground)]">Home</a><span>/</span><span class="text-[var(--foreground)] font-medium">Planning & Definition</span></nav></div></div>
+
+    <section class="py-16 lg:py-20 bg-[var(--background)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-3xl">
+      <div class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium mb-4" style="background-color:rgba(13,115,119,0.1);color:#0d7377;">Topic Area</div>
+      <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">Project Planning & Definition</h1>
+      <p class="mt-6 text-xl leading-relaxed text-[var(--muted-foreground)]">Most failed projects don't fail at the end. They fail at the start - they were never properly defined. A few hours spent clearly defining a project at the front end saves weeks of confusion later. This is the highest-leverage time you will spend on any project.</p>
+    </div></div></section>
+
+    <section class="py-12 lg:py-16 bg-[var(--card)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-3xl prose-content">
+      <h2>The Iron Triangle</h2>
+      <p>Every project has three core constraints (Houghton, 2023, ch.6): Scope (what is being delivered), Time (when it must be delivered), and Cost (what it can cost). The fundamental rule: you can fix any two, but the third must flex. If scope and time are fixed, cost has to absorb the pressure. If cost and time are fixed, scope has to give. There is no way round this.</p>
+      <p>Houghton's New Iron Triangle adds two further constraints: Quality (is the deliverable fit for purpose?) and Sustainability (will it last? what is the impact on people, planet, and the team?). Use the triangle as a conversation tool. Ask the funder, the board, the team: which of these is fixed for us, which can flex? You will learn more in 20 minutes of that conversation than in 20 pages of project documentation.</p>
+
+      <h2>The "3 Yes's and a No" Conversation</h2>
+      <p>This is one of Houghton's most useful tools for handling the inevitable mid-project requests for "just one small extra thing." When someone asks for a change, the answer is always yes - three times - before it can become a no:</p>
+      <ol>
+        <li>"Yes, you can have that feature. It will add three days to the timeline - happy to push the launch back?" <em>No, the date is fixed.</em></li>
+        <li>"Yes, you can have it on time. We will need to bring in a contractor - can you find €1,500 in the budget?" <em>No, there is no extra money.</em></li>
+        <li>"Yes, you can have it within budget and on time. Show me what we should drop from the existing plan." <em>No, everything in there is already essential.</em></li>
+        <li>"Then I am afraid the answer is no."</li>
+      </ol>
+      <p>The genius of this approach is that it never says no first. It forces the person asking for the change to understand the trade-off they are requesting. For a small Irish organisation where the project manager often reports to people more senior than them (board members, founders, major funders), this script is invaluable - it is a way of pushing back without confrontation.</p>
+
+      <h2>Feasibility Investigation</h2>
+      <p>Before committing, ask honestly: should we be doing this at all? Houghton's Feasibility Investigation checks four dimensions:</p>
+      <ul>
+        <li><strong>Market</strong> - Is there real demand? Who actually wants this? Will beneficiaries use it?</li>
+        <li><strong>Technical</strong> - Do we have the skills, tools, and methods to deliver? If not, can we get them?</li>
+        <li><strong>Organisational</strong> - Do we have the people, governance, and capacity? Does it fit our charitable purpose?</li>
+        <li><strong>Financial</strong> - Can we afford to do it? Can we afford to maintain it after launch?</li>
+      </ul>
+      <p>A clear "no" in any one dimension is a problem worth surfacing now rather than at the halfway mark. These same weaknesses also seed your initial risk identification.</p>
+
+      <h2>The Business Case</h2>
+      <p>The business case answers: why are we doing this, and is it worth it? For a small organisation it does not need to be long - half a page is often enough. Cover: the problem or opportunity; the proposed response; the benefits (quantitative and qualitative); the costs (money, time, opportunity cost); alternatives considered including "do nothing"; the recommendation and why.</p>
+      <p>The "do nothing" option is genuinely important. Sometimes the most useful thing a business case can do is establish that the cost of inaction is real.</p>
+
+      <h2>The Project Charter</h2>
+      <p>The project charter is the one-page agreement that says "this is the project we are doing." Once signed, it is the reference point everyone comes back to when memories diverge. A minimal charter for a small org includes: project name and brief description; project sponsor (one named person ultimately accountable); project manager (one named person running it day-to-day); objectives; scope (what is in, what is out - the "out" list is often more useful); key deliverables and rough milestones; budget envelope; key stakeholders; major assumptions and known risks; sign-off by the sponsor.</p>
+
+      <h2>Choosing Your Approach</h2>
+      <p>Once the project is defined, choose how to run it: Waterfall (plan everything upfront, sequential), Agile (short iterative cycles), or Hybrid (most small-org projects). See the <a href="methodologies.html" style="color:#0d7377;">Methodologies page</a> for the full treatment. The key question: are the requirements stable (lean Waterfall) or will they evolve (lean Agile)?</p>
+
+      <h2>Common Pitfalls</h2>
+      <ul>
+        <li>Vague goals - "improve community engagement" is not a project objective; it is a wish. Make objectives specific and testable.</li>
+        <li>Skipping the charter because "everyone knows what we're doing" - six months later, half the team has changed and nobody remembers</li>
+        <li>Scope creep that starts before the project does - "while we're at it, can we also..."</li>
+        <li>Treating the business case as a tick-box for a funder - it is a tool for you, to test whether the project is worth doing</li>
+        <li>Defining the project alone - definition is a conversation; if only one person owns it, you will discover the disagreements during execution</li>
+      </ul>
+    </div></div></section>
+
+    <section class="py-12 lg:py-16 bg-[var(--background)]"><div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 class="text-2xl font-bold mb-8">Key Concepts</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M3.75 3v11.25A2.25 2.25 0 006 16.5h2.25M3.75 3h-1.5m1.5 0h16.5m0 0h1.5m-1.5 0v11.25A2.25 2.25 0 0118 16.5h-2.25m-7.5 0h7.5m-7.5 0l-1 3m8.5-3l1 3m0 0l.5 1.5m-.5-1.5h-9.5m0 0l-.5 1.5M9 11.25v1.5M12 9v3.75m3-6v6"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">The Iron Triangle</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">Scope, Time, and Cost are the three constraints. Fix any two and the third must flex. No project can ignore this; the skill is knowing which two are truly fixed.</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M8.625 9.75a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375m-13.5 3.01c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.184-4.183a1.14 1.14 0 01.778-.332 48.294 48.294 0 005.83-.498c1.585-.233 2.708-1.626 2.708-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">3 Yes's and a No</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">Houghton's script for handling change requests without confrontation. Say yes three times (exploring each trade-off) before saying no. Forces the requester to understand the cost of their ask.</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75M21 12a9 9 0 11-18 0 9 9 0 0118 0z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Feasibility Investigation</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">Four checks before committing: Market (is there demand?), Technical (can we deliver?), Organisational (do we have capacity?), Financial (can we afford to run it after launch?).</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M19.5 14.25v-2.625a3.375 3.375 0 00-3.375-3.375h-1.5A1.125 1.125 0 0113.5 7.125v-1.5a3.375 3.375 0 00-3.375-3.375H8.25m0 12.75h7.5m-7.5 3H12M10.5 2.25H5.625c-.621 0-1.125.504-1.125 1.125v17.25c0 .621.504 1.125 1.125 1.125h12.75c.621 0 1.125-.504 1.125-1.125V11.25a9 9 0 00-9-9z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Project Charter</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">The one-page agreement everyone signs before work begins. Sponsor, PM, objectives, scope (in and out), milestones, budget, stakeholders, risks. The reference point when memories diverge.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="py-12 bg-[var(--card)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><h2 class="text-xl font-semibold mb-6">Related Topics</h2><div class="flex flex-wrap gap-3"><a href="risk.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Risk Management</a><a href="methodologies.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Methodologies</a><a href="stakeholders.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Stakeholders</a><a href="governance.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Governance</a></div></div></section>
+  </main>
+
+  <footer class="border-t bg-[var(--card)] mt-20" style="border-color:var(--border);"><div class="mx-auto max-w-7xl px-6 py-12 lg:px-8"><div class="grid gap-8 md:grid-cols-2 lg:grid-cols-4"><div class="lg:col-span-1"><a href="../index.html" class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1566341013452-946caa457784?w=80&h=80&fit=crop&q=80" alt="PM" class="h-10 w-10 rounded-lg object-cover"><div><span class="text-lg font-semibold">Project Management</span><span class="block text-xs text-[var(--muted-foreground)]">Made Practical</span></div></a></div><div><h3 class="text-sm font-semibold">Topics</h3><ul class="mt-4 space-y-2"><li><a href="risk.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Risk Management</a></li><li><a href="planning.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Planning</a></li><li><a href="implementation.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Implementation</a></li></ul></div><div><h3 class="text-sm font-semibold">ECCSR</h3><ul class="mt-4 space-y-2"><li><a href="../eccsr/creating.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Creating</a></li><li><a href="../eccsr/results.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Results</a></li></ul></div><div><h3 class="text-sm font-semibold">Guide</h3><ul class="mt-4 space-y-2"><li><a href="../index.html" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Home</a></li><li><a href="../index.html#resources" class="text-sm text-[var(--muted-foreground)] hover:text-[var(--foreground)]">Resources</a></li></ul></div></div><div class="mt-12 border-t pt-8" style="border-color:var(--border);"><p class="text-xs text-[var(--muted-foreground)]">&copy; 2026 Project Management Made Practical.</p></div></div></footer>
+  <script>
+    function setTheme(t){if(t==='dark'){document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');document.getElementById('sun-icon').classList.add('hidden');document.getElementById('moon-icon').classList.remove('hidden');}else{document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');document.getElementById('sun-icon').classList.remove('hidden');document.getElementById('moon-icon').classList.add('hidden');}}
+    setTheme(localStorage.getItem('theme')||'light');
+    document.getElementById('theme-toggle').addEventListener('click',function(){setTheme(document.documentElement.classList.contains('dark')?'light':'dark');});
+    document.getElementById('mobile-menu-btn').addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    (function(){var btn=document.getElementById('topics-btn'),panel=document.getElementById('topics-panel');function close(){panel.classList.remove('open');btn.setAttribute('aria-expanded','false');}btn.addEventListener('click',function(e){e.stopPropagation();panel.classList.contains('open')?close():(panel.classList.add('open'),btn.setAttribute('aria-expanded','true'));});document.addEventListener('click',function(e){if(!panel.contains(e.target)&&e.target!==btn)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+  </script>
+<button id="chatbot-btn" class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full shadow-lg transition-all hover:scale-110" style="background-color:#0d7377;" aria-label="Open chatbot"><svg class="h-6 w-6 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.129.166 2.27.293 3.423.379.35.026.67.21.865.501L12 21l2.755-4.133a1.14 1.14 0 01.865-.501 48.172 48.172 0 003.423-.379c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z"/></svg></button>
+<div id="chatbot-panel" class="fixed right-6 z-50 w-full max-w-md hidden" style="bottom:6rem;"><div class="rounded-2xl shadow-2xl overflow-hidden" style="background:var(--card);border:1px solid var(--border);"><div class="flex items-center justify-between px-4 py-3" style="background-color:#0d7377;"><div class="flex items-center gap-2"><div class="h-2 w-2 rounded-full bg-white opacity-80"></div><span class="text-sm font-semibold text-white">PM Assistant</span></div><button id="close-chatbot" class="text-white opacity-70 hover:opacity-100 transition-opacity"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div id="chat-messages" class="h-72 overflow-y-auto px-4 py-3 space-y-3 text-sm"></div><div class="border-t px-3 py-2 flex gap-2" style="border-color:var(--border);"><input id="chat-input" type="text" placeholder="Ask me anything…" class="flex-1 rounded-lg px-3 py-2 text-sm outline-none" style="background:var(--muted);color:var(--foreground);" autocomplete="off"><button id="send-btn" class="px-3 py-2 rounded-lg text-white text-sm font-medium" style="background-color:#0d7377;">Send</button></div></div></div>
+<script>(function(){var cb=document.getElementById('chatbot-btn'),cp=document.getElementById('chatbot-panel'),cc=document.getElementById('close-chatbot'),ci=document.getElementById('chat-input'),sb=document.getElementById('send-btn'),cm=document.getElementById('chat-messages'),pn=null;var T=[{name:'Risk Management',kw:['risk'],url:'../topics/risk.html'},{name:'Leadership',kw:['leadership','leader'],url:'../topics/leadership.html'},{name:'Teams',kw:['team','teams'],url:'../topics/teams.html'},{name:'Ethics',kw:['ethics'],url:'../topics/ethics.html'},{name:'Sustainability',kw:['sustainab'],url:'../topics/sustainability.html'},{name:'Governance',kw:['governance','govern'],url:'../topics/governance.html'},{name:'Strategy',kw:['strateg'],url:'../topics/strategy.html'},{name:'Planning',kw:['planning','plan'],url:'../topics/planning.html'},{name:'Implementation',kw:['implement'],url:'../topics/implementation.html'},{name:'Stakeholders',kw:['stakeholder'],url:'../topics/stakeholders.html'},{name:'Methodologies',kw:['methodolog'],url:'../topics/methodologies.html'},{name:'AI in Projects',kw:['ai','artificial'],url:'../topics/ai.html'},{name:'Ethical (ECCSR)',kw:['eccsr','ethical'],url:'../eccsr/ethical.html'},{name:'Collaboration (ECCSR)',kw:['collaboration'],url:'../eccsr/collaboration.html'},{name:'Creating Value (ECCSR)',kw:['creating value','creating'],url:'../eccsr/creating.html'},{name:'Sustainable (ECCSR)',kw:['sustainable'],url:'../eccsr/sustainable.html'},{name:'Results (ECCSR)',kw:['results'],url:'../eccsr/results.html'}];function det(m){var l=m.toLowerCase();return T.find(function(t){return t.kw.some(function(k){return l.includes(k);});});}function aff(m){return /\b(yes|yeah|sure|ok|okay|yep|go ahead|please|do it|show me|take me)\b/i.test(m);}function neg(m){return /\b(no|nope|cancel|never mind|nevermind|stop)\b/i.test(m);}function addMsg(t,s){var d=document.createElement('div');d.className='flex '+(s==='user'?'justify-end':'justify-start');var b=document.createElement('div');b.className='max-w-[80%] rounded-xl px-3 py-2 text-sm leading-relaxed';b.style.cssText=s==='user'?'background-color:#0d7377;color:white;':'background:var(--muted);color:var(--foreground);';b.textContent=t;d.appendChild(b);cm.appendChild(d);cm.scrollTop=cm.scrollHeight;}function addBtn(ls,cbs){var d=document.createElement('div');d.className='flex gap-2';ls.forEach(function(l,i){var b=document.createElement('button');b.textContent=l;b.className='rounded-lg px-3 py-1.5 text-xs font-medium border transition-colors hover:opacity-80';b.style.cssText='border-color:var(--border);background:var(--muted);color:var(--foreground);';b.addEventListener('click',function(){d.remove();cbs[i]();});d.appendChild(b);});cm.appendChild(d);cm.scrollTop=cm.scrollHeight;}function nav(tp){addMsg('Taking you to '+tp.name+'…','bot');setTimeout(function(){window.location.href=tp.url;},300);}function prompt(tp){pn=tp;addMsg('Would you like to go to the '+tp.name+' page?','bot');addBtn(['Yes, take me there','No thanks'],[function(){nav(tp);},function(){pn=null;addMsg('No problem! Ask me about any project management topic.','bot');}]);}function handle(m){if(!m.trim())return;addMsg(m,'user');m=m.trim();if(pn){if(aff(m)){var t=pn;pn=null;nav(t);return;}if(neg(m)){pn=null;addMsg('No problem! Ask me about any project management topic.','bot');return;}}var tp=det(m);if(tp){prompt(tp);}else if(/help|what can|topics/i.test(m)){addMsg('I can help you navigate to any topic. Try asking about risk, leadership, AI, or the ECCSR framework!','bot');}else{addMsg("I'm not sure about that one. Try asking about a specific topic like risk management, strategy, or governance.",'bot');}}cb.addEventListener('click',function(){cp.classList.toggle('hidden');if(!cp.classList.contains('hidden')&&cm.children.length===0)addMsg("Hi! I'm your PM Assistant. Ask me about any project management topic and I'll take you there.",'bot');});cc.addEventListener('click',function(){cp.classList.add('hidden');});sb.addEventListener('click',function(){handle(ci.value);ci.value='';});ci.addEventListener('keydown',function(e){if(e.key==='Enter'){handle(ci.value);ci.value='';}});})();</script>
+</body>
+</html>

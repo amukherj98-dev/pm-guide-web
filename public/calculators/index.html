@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Calculators | Project Management Guide Ireland</title>
+  <meta name="description" content="Interactive calculators for project budget, capacity planning, risk exposure, and event break-even analysis.">
+
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: { sans: ['Inter','system-ui','sans-serif'] },
+          colors: {
+            primary: { DEFAULT: '#0d7377', foreground: '#ffffff' },
+            accent:  { DEFAULT: '#d4a853', foreground: '#1a1a2e' },
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    :root {
+      --background: #faf9f7;
+      --foreground: #1a1a2e;
+      --card: #ffffff;
+      --muted: #f0efed;
+      --muted-foreground: #64748b;
+      --border: #e2e1df;
+    }
+    .dark {
+      --background: #0a0a0a;
+      --foreground: #fafafa;
+      --card: #18181b;
+      --muted: #27272a;
+      --muted-foreground: #a1a1aa;
+      --border: #3f3f46;
+    }
+    body { font-family:'Inter',system-ui,sans-serif; background:var(--background); color:var(--foreground); }
+
+    .card { background:var(--card); border:1px solid var(--border); border-radius:1rem; }
+
+    .field-label { display:block; font-size:0.875rem; font-weight:500; margin-bottom:0.375rem; color:var(--foreground); }
+    .field-hint  { font-size:0.75rem; color:var(--muted-foreground); margin-top:0.25rem; }
+
+    .calc-input {
+      width:100%; padding:0.5rem 0.75rem; border:1px solid var(--border);
+      border-radius:0.5rem; background:var(--background); color:var(--foreground);
+      font-size:0.9375rem; transition:border-color 0.15s, box-shadow 0.15s;
+      outline:none;
+    }
+    .calc-input:focus { border-color:#0d7377; box-shadow:0 0 0 3px rgba(13,115,119,0.12); }
+
+    .calc-select {
+      width:100%; padding:0.625rem 0.875rem; border:1px solid var(--border);
+      border-radius:0.625rem; background:var(--background); color:var(--foreground);
+      font-size:1rem; font-weight:500; cursor:pointer; outline:none;
+      transition:border-color 0.15s, box-shadow 0.15s; appearance:none;
+      background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' fill='none' viewBox='0 0 24 24' stroke-width='1.5' stroke='%2364748b'%3E%3Cpath stroke-linecap='round' stroke-linejoin='round' d='M19.5 8.25l-7.5 7.5-7.5-7.5'/%3E%3C/svg%3E");
+      background-repeat:no-repeat; background-position:right 0.75rem center; background-size:1.25rem;
+      padding-right:2.5rem;
+    }
+    .calc-select:focus { border-color:#0d7377; box-shadow:0 0 0 3px rgba(13,115,119,0.12); }
+
+    .result-card {
+      background: linear-gradient(135deg, rgba(13,115,119,0.06) 0%, rgba(13,115,119,0.02) 100%);
+      border:1px solid rgba(13,115,119,0.2); border-radius:0.75rem; padding:1rem 1.25rem;
+    }
+    .result-value { font-size:1.5rem; font-weight:700; color:#0d7377; }
+    .result-label { font-size:0.8125rem; color:var(--muted-foreground); margin-top:0.125rem; }
+    .result-positive { color:#16a34a; }
+    .result-negative { color:#dc2626; }
+    .result-warning  { color:#d97706; }
+
+    .priority-low      { color:#16a34a; font-weight:700; }
+    .priority-medium   { color:#d97706; font-weight:700; }
+    .priority-high     { color:#dc2626; font-weight:700; }
+    .priority-critical { color:#7c3aed; font-weight:700; }
+
+    .slider-wrap { display:flex; align-items:center; gap:0.75rem; }
+    .slider { flex:1; height:6px; border-radius:3px; accent-color:#0d7377; cursor:pointer; }
+    .slider-val { min-width:2rem; text-align:center; font-weight:700; color:#0d7377; font-size:1.125rem; }
+
+    .section-title { font-size:0.6875rem; font-weight:700; letter-spacing:0.08em; text-transform:uppercase; color:var(--muted-foreground); margin-bottom:0.75rem; }
+
+    /* Dynamic row list */
+    .row-list { display:flex; flex-direction:column; gap:0.5rem; }
+    .row-item { display:flex; gap:0.5rem; align-items:flex-end; }
+    .row-item .calc-input { flex:1; }
+    .remove-btn { flex-shrink:0; width:2rem; height:2rem; display:flex; align-items:center; justify-content:center; border-radius:0.375rem; border:1px solid var(--border); background:var(--muted); cursor:pointer; color:var(--muted-foreground); transition:background 0.15s; }
+    .remove-btn:hover { background:#fee2e2; color:#dc2626; border-color:#fca5a5; }
+    .add-btn { font-size:0.8125rem; font-weight:500; color:#0d7377; background:rgba(13,115,119,0.07); border:1px dashed rgba(13,115,119,0.3); border-radius:0.5rem; padding:0.4rem 0.75rem; cursor:pointer; transition:background 0.15s; }
+    .add-btn:hover { background:rgba(13,115,119,0.14); }
+
+    .download-btn {
+      display:inline-flex; align-items:center; gap:0.5rem; font-size:0.8125rem; font-weight:500;
+      color:#0d7377; border:1px solid rgba(13,115,119,0.3); border-radius:0.5rem;
+      padding:0.375rem 0.75rem; background:rgba(13,115,119,0.05); cursor:pointer; text-decoration:none;
+      transition:background 0.15s;
+    }
+    .download-btn:hover { background:rgba(13,115,119,0.12); }
+
+    @keyframes fadeIn { from{opacity:0;transform:translateY(6px)} to{opacity:1;transform:translateY(0)} }
+    .fade-in { animation:fadeIn 0.22s ease; }
+  </style>
+</head>
+<body>
+
+  <!-- Nav -->
+  <header class="sticky top-0 z-50 border-b" style="background:var(--card);border-color:var(--border);">
+    <div class="mx-auto max-w-7xl px-6 lg:px-8 flex h-14 items-center justify-between gap-4">
+      <a href="../index.html" class="flex items-center gap-2 font-semibold text-sm" style="color:var(--foreground);">
+        <svg class="h-5 w-5" style="color:#0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+          <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5"/>
+        </svg>
+        Back to Guide
+      </a>
+      <span class="text-sm font-semibold" style="color:#0d7377;">Calculators</span>
+      <button id="theme-toggle" class="p-2 rounded-lg" style="color:var(--muted-foreground);" aria-label="Toggle theme">
+        <svg id="icon-sun" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg>
+        <svg id="icon-moon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg>
+      </button>
+    </div>
+  </header>
+
+  <!-- Hero -->
+  <section class="py-12 lg:py-16" style="background:var(--card);border-bottom:1px solid var(--border);">
+    <div class="mx-auto max-w-3xl px-6 text-center">
+      <div class="inline-flex items-center gap-2 rounded-full px-3 py-1 text-xs font-semibold mb-4" style="background:rgba(13,115,119,0.1);color:#0d7377;">
+        <svg class="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/></svg>
+        Interactive Calculators
+      </div>
+      <h1 class="text-3xl font-bold tracking-tight sm:text-4xl">Project Management Calculators</h1>
+      <p class="mt-4 text-lg" style="color:var(--muted-foreground);">
+        Select a calculator, enter your figures, and get instant results.
+        Download the full spreadsheet for detailed analysis.
+      </p>
+    </div>
+  </section>
+
+  <!-- Main -->
+  <main class="mx-auto max-w-4xl px-6 py-10 lg:py-14">
+
+    <!-- Selector -->
+    <div class="mb-8">
+      <label class="field-label text-base font-semibold mb-2" for="calc-select">Choose a calculator</label>
+      <select id="calc-select" class="calc-select max-w-md">
+        <option value="">- Select a calculator -</option>
+        <option value="budget">Project Budget Calculator</option>
+        <option value="capacity">Capacity Planning Calculator</option>
+        <option value="risk">Risk Exposure Calculator</option>
+        <option value="breakeven">Event Break-Even Calculator</option>
+      </select>
+    </div>
+
+    <!-- Calculator panels (hidden by default) -->
+    <div id="calc-container"></div>
+
+    <!-- Placeholder when nothing selected -->
+    <div id="calc-placeholder" class="card p-12 text-center" style="border-style:dashed;">
+      <svg class="mx-auto h-12 w-12 mb-4" style="color:var(--border);" fill="none" viewBox="0 0 24 24" stroke-width="1" stroke="currentColor">
+        <path stroke-linecap="round" stroke-linejoin="round" d="M15.75 15.75V18m-7.5-6.75h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V13.5zm0 2.25h.008v.008H8.25v-.008zm0 2.25h.008v.008H8.25V18zm2.498-6.75h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V13.5zm0 2.25h.007v.008h-.007v-.008zm0 2.25h.007v.008h-.007V18zm2.504-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zm0 2.25h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V18zm2.498-6.75h.008v.008h-.008v-.008zm0 2.25h.008v.008h-.008V13.5zM8.25 6h7.5v2.25h-7.5V6zM12 2.25c-1.892 0-3.758.11-5.593.322C5.307 2.7 4.5 3.65 4.5 4.757V19.5a2.25 2.25 0 002.25 2.25h10.5a2.25 2.25 0 002.25-2.25V4.757c0-1.108-.806-2.057-1.907-2.185A48.507 48.507 0 0012 2.25z"/>
+      </svg>
+      <p class="font-semibold" style="color:var(--muted-foreground);">Select a calculator above to get started</p>
+    </div>
+
+  </main>
+
+  <script>
+  (function() {
+
+    var sel = document.getElementById('calc-select');
+    var container = document.getElementById('calc-container');
+    var placeholder = document.getElementById('calc-placeholder');
+
+    // ── Utilities ─────────────────────────────────────────────────
+    function fmt(n, symbol) {
+      if (isNaN(n) || !isFinite(n)) return '-';
+      var s = symbol || '';
+      return s + n.toLocaleString('en-IE', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    }
+    function fmtInt(n) {
+      if (isNaN(n) || !isFinite(n)) return '-';
+      return Math.ceil(n).toLocaleString('en-IE');
+    }
+    function val(id) { return parseFloat(document.getElementById(id).value) || 0; }
+
+    // ── BUDGET CALCULATOR ──────────────────────────────────────────
+    var budgetCategories = [
+      { label: 'Personnel', placeholder: 'e.g. 5000', value: '' },
+      { label: 'Equipment', placeholder: 'e.g. 2400', value: '' },
+      { label: 'Venue',     placeholder: 'e.g. 1200', value: '' },
+      { label: 'Marketing', placeholder: 'e.g. 800',  value: '' },
+      { label: 'Travel',    placeholder: 'e.g. 400',  value: '' },
+    ];
+
+    function renderBudget() {
+      var rows = budgetCategories.map(function(cat, i) {
+        return '<div class="row-item">'
+          + '<div style="width:130px;flex-shrink:0;">'
+          + '<input class="calc-input budget-cat-name" data-i="'+i+'" value="'+cat.label+'" placeholder="Category" style="font-size:0.875rem;">'
+          + '</div>'
+          + '<div style="flex:1;position:relative;">'
+          + '<span style="position:absolute;left:0.6rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);font-size:0.875rem;">€</span>'
+          + '<input class="calc-input budget-cat-val" data-i="'+i+'" value="'+cat.value+'" placeholder="'+cat.placeholder+'" style="padding-left:1.5rem;" type="number" min="0">'
+          + '</div>'
+          + '<button class="remove-btn budget-remove" data-i="'+i+'" title="Remove" aria-label="Remove row">'
+          + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+          + '</button>'
+          + '</div>';
+      }).join('');
+
+      container.innerHTML = '<div class="fade-in">'
+        + '<div class="flex items-start justify-between flex-wrap gap-3 mb-6">'
+        + '<div><h2 class="text-xl font-bold">Project Budget Calculator</h2>'
+        + '<p class="mt-1 text-sm" style="color:var(--muted-foreground);">Enter your cost categories and contingency to calculate total budget.</p></div>'
+        + '<a class="download-btn" href="sheets/project-budget-calculator.xlsx" download>'
+        + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>'
+        + 'Download spreadsheet</a>'
+        + '</div>'
+        + '<div class="grid lg:grid-cols-2 gap-8">'
+        // LEFT: inputs
+        + '<div class="card p-6">'
+        + '<p class="section-title">Cost Categories</p>'
+        + '<div class="row-list mb-3" id="budget-rows">' + rows + '</div>'
+        + '<button class="add-btn" id="budget-add">+ Add category</button>'
+        + '<div class="mt-6 pt-5" style="border-top:1px solid var(--border);">'
+        + '<label class="field-label" for="budget-contingency">Contingency (%)</label>'
+        + '<div style="position:relative;">'
+        + '<input class="calc-input" id="budget-contingency" type="number" min="0" max="100" value="10" placeholder="10">'
+        + '<span style="position:absolute;right:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);">%</span>'
+        + '</div>'
+        + '<p class="field-hint">Typical range: 5–15%</p>'
+        + '</div>'
+        + '</div>'
+        // RIGHT: results
+        + '<div>'
+        + '<p class="section-title">Results</p>'
+        + '<div class="flex flex-col gap-3" id="budget-results">'
+        + buildBudgetResults()
+        + '</div>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+
+      bindBudgetEvents();
+    }
+
+    function buildBudgetResults() {
+      var subtotal = budgetCategories.reduce(function(s, c) { return s + (parseFloat(c.value) || 0); }, 0);
+      var contPct  = 10;
+      var contingEl = document.getElementById('budget-contingency');
+      if (contingEl) contPct = parseFloat(contingEl.value) || 0;
+      var contingency = subtotal * contPct / 100;
+      var total = subtotal + contingency;
+
+      var categories = budgetCategories.filter(function(c) { return parseFloat(c.value) > 0; });
+      var breakdown = categories.map(function(c) {
+        var pct = subtotal > 0 ? ((parseFloat(c.value)/subtotal)*100).toFixed(1) : 0;
+        return '<div class="flex justify-between items-center py-1.5" style="border-bottom:1px solid var(--border);">'
+          + '<span class="text-sm">' + (c.label || 'Unnamed') + '</span>'
+          + '<span class="text-sm font-medium">€' + (parseFloat(c.value)||0).toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + ' <span style="color:var(--muted-foreground);font-weight:400;">(' + pct + '%)</span></span>'
+          + '</div>';
+      }).join('');
+
+      return '<div class="result-card"><div class="result-label">Cost Subtotal</div><div class="result-value">€' + (subtotal).toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + '<div class="result-card"><div class="result-label">Contingency (' + contPct + '%)</div><div class="result-value" style="font-size:1.25rem;">€' + contingency.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + '<div class="result-card" style="background:linear-gradient(135deg,rgba(13,115,119,0.12),rgba(13,115,119,0.04));border-color:rgba(13,115,119,0.35);"><div class="result-label">Total Budget</div><div class="result-value" style="font-size:2rem;">€' + total.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + (breakdown ? '<div class="card p-4 mt-1"><p class="section-title mb-3">Breakdown</p>' + breakdown + '</div>' : '');
+    }
+
+    function bindBudgetEvents() {
+      document.querySelectorAll('.budget-cat-name').forEach(function(inp) {
+        inp.addEventListener('input', function() {
+          budgetCategories[+inp.dataset.i].label = inp.value;
+          document.getElementById('budget-results').innerHTML = buildBudgetResults();
+        });
+      });
+      document.querySelectorAll('.budget-cat-val').forEach(function(inp) {
+        inp.addEventListener('input', function() {
+          budgetCategories[+inp.dataset.i].value = inp.value;
+          document.getElementById('budget-results').innerHTML = buildBudgetResults();
+        });
+      });
+      document.querySelectorAll('.budget-remove').forEach(function(btn) {
+        btn.addEventListener('click', function() {
+          budgetCategories.splice(+btn.dataset.i, 1);
+          renderBudget();
+        });
+      });
+      var addBtn = document.getElementById('budget-add');
+      if (addBtn) addBtn.addEventListener('click', function() {
+        budgetCategories.push({ label:'New Category', placeholder:'0', value:'' });
+        renderBudget();
+      });
+      var contingInput = document.getElementById('budget-contingency');
+      if (contingInput) contingInput.addEventListener('input', function() {
+        document.getElementById('budget-results').innerHTML = buildBudgetResults();
+      });
+    }
+
+    // ── CAPACITY CALCULATOR ────────────────────────────────────────
+    var capacityPeople = [
+      { name:'Person 1', role:'', available:'40', projects:[{ name:'Project A', hours:'20' }] },
+    ];
+
+    function renderCapacity() {
+      var personForms = capacityPeople.map(function(person, pi) {
+        var projectRows = person.projects.map(function(proj, ji) {
+          return '<div class="row-item">'
+            + '<input class="calc-input cap-proj-name" data-pi="'+pi+'" data-ji="'+ji+'" value="'+proj.name+'" placeholder="Project name" style="font-size:0.875rem;">'
+            + '<div style="width:120px;flex-shrink:0;position:relative;">'
+            + '<input class="calc-input cap-proj-hrs" data-pi="'+pi+'" data-ji="'+ji+'" value="'+proj.hours+'" placeholder="hrs" type="number" min="0" style="padding-right:2.5rem;">'
+            + '<span style="position:absolute;right:0.5rem;top:50%;transform:translateY(-50%);font-size:0.75rem;color:var(--muted-foreground);">hrs</span>'
+            + '</div>'
+            + '<button class="remove-btn cap-proj-remove" data-pi="'+pi+'" data-ji="'+ji+'" title="Remove project">'
+            + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>'
+            + '</button>'
+            + '</div>';
+        }).join('');
+
+        return '<div class="card p-5 mb-4 cap-person-card" data-pi="'+pi+'">'
+          + '<div class="flex gap-3 mb-4">'
+          + '<div style="flex:1;"><label class="field-label" style="font-size:0.8125rem;">Name</label><input class="calc-input cap-name" data-pi="'+pi+'" value="'+person.name+'" placeholder="e.g. Alice Murphy"></div>'
+          + '<div style="flex:1;"><label class="field-label" style="font-size:0.8125rem;">Role</label><input class="calc-input cap-role" data-pi="'+pi+'" value="'+person.role+'" placeholder="e.g. Project Manager"></div>'
+          + '<div style="width:130px;flex-shrink:0;"><label class="field-label" style="font-size:0.8125rem;">Available hrs/week</label><input class="calc-input cap-avail" data-pi="'+pi+'" value="'+person.available+'" type="number" min="0" max="168" placeholder="40"></div>'
+          + '<button class="remove-btn cap-person-remove" data-pi="'+pi+'" title="Remove person" style="margin-top:1.5rem;"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>'
+          + '</div>'
+          + '<p class="section-title">Project allocations</p>'
+          + '<div class="row-list mb-2 cap-proj-rows">' + projectRows + '</div>'
+          + '<button class="add-btn cap-proj-add" data-pi="'+pi+'" style="font-size:0.75rem;">+ Add project</button>'
+          + '</div>';
+      }).join('');
+
+      container.innerHTML = '<div class="fade-in">'
+        + '<div class="flex items-start justify-between flex-wrap gap-3 mb-6">'
+        + '<div><h2 class="text-xl font-bold">Capacity Planning Calculator</h2>'
+        + '<p class="mt-1 text-sm" style="color:var(--muted-foreground);">See who is over or under capacity across your projects.</p></div>'
+        + '<a class="download-btn" href="sheets/capacity-planning-calculator.xlsx" download>'
+        + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>'
+        + 'Download spreadsheet</a>'
+        + '</div>'
+        + '<div id="cap-people-list">' + personForms + '</div>'
+        + '<button class="add-btn mb-8" id="cap-person-add">+ Add person</button>'
+        + '<div>'
+        + '<p class="section-title">Capacity Summary</p>'
+        + '<div id="cap-results" class="grid sm:grid-cols-2 gap-3">' + buildCapacityResults() + '</div>'
+        + '</div>'
+        + '</div>';
+
+      bindCapacityEvents();
+    }
+
+    function buildCapacityResults() {
+      return capacityPeople.map(function(p) {
+        var allocated = p.projects.reduce(function(s, pr) { return s + (parseFloat(pr.hours)||0); }, 0);
+        var avail = parseFloat(p.available) || 0;
+        var diff = avail - allocated;
+        var pct = avail > 0 ? Math.round((allocated/avail)*100) : 0;
+        var statusClass = diff < 0 ? 'result-negative' : (diff === 0 ? '' : 'result-positive');
+        var statusText  = diff < 0 ? 'Over capacity' : (diff === 0 ? 'Fully allocated' : 'Capacity available');
+        return '<div class="result-card">'
+          + '<div class="text-sm font-semibold">' + (p.name || 'Unnamed') + (p.role ? ' <span style="font-weight:400;color:var(--muted-foreground);">· ' + p.role + '</span>' : '') + '</div>'
+          + '<div class="flex items-end justify-between mt-2">'
+          + '<div><div class="result-value" style="font-size:1.25rem;">' + allocated + ' / ' + avail + ' hrs</div><div class="result-label">allocated / available per week</div></div>'
+          + '<div class="text-right"><div class="' + statusClass + '" style="font-size:0.875rem;font-weight:700;">' + (diff >= 0 ? '+' : '') + diff + ' hrs</div><div class="result-label">' + statusText + '</div></div>'
+          + '</div>'
+          + '<div class="mt-3" style="background:var(--muted);border-radius:9999px;height:6px;overflow:hidden;">'
+          + '<div style="height:100%;width:' + Math.min(pct,100) + '%;background:' + (diff < 0 ? '#dc2626' : '#0d7377') + ';border-radius:9999px;transition:width 0.3s;"></div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function bindCapacityEvents() {
+      function refresh() { document.getElementById('cap-results').innerHTML = buildCapacityResults(); }
+      document.querySelectorAll('.cap-name').forEach(function(inp) { inp.addEventListener('input', function() { capacityPeople[+inp.dataset.pi].name = inp.value; refresh(); }); });
+      document.querySelectorAll('.cap-role').forEach(function(inp) { inp.addEventListener('input', function() { capacityPeople[+inp.dataset.pi].role = inp.value; refresh(); }); });
+      document.querySelectorAll('.cap-avail').forEach(function(inp) { inp.addEventListener('input', function() { capacityPeople[+inp.dataset.pi].available = inp.value; refresh(); }); });
+      document.querySelectorAll('.cap-proj-name').forEach(function(inp) { inp.addEventListener('input', function() { capacityPeople[+inp.dataset.pi].projects[+inp.dataset.ji].name = inp.value; refresh(); }); });
+      document.querySelectorAll('.cap-proj-hrs').forEach(function(inp) { inp.addEventListener('input', function() { capacityPeople[+inp.dataset.pi].projects[+inp.dataset.ji].hours = inp.value; refresh(); }); });
+      document.querySelectorAll('.cap-proj-remove').forEach(function(btn) { btn.addEventListener('click', function() { capacityPeople[+btn.dataset.pi].projects.splice(+btn.dataset.ji, 1); renderCapacity(); }); });
+      document.querySelectorAll('.cap-proj-add').forEach(function(btn) { btn.addEventListener('click', function() { capacityPeople[+btn.dataset.pi].projects.push({ name:'Project', hours:'' }); renderCapacity(); }); });
+      document.querySelectorAll('.cap-person-remove').forEach(function(btn) { btn.addEventListener('click', function() { capacityPeople.splice(+btn.dataset.pi, 1); renderCapacity(); }); });
+      var addPerson = document.getElementById('cap-person-add');
+      if (addPerson) addPerson.addEventListener('click', function() { capacityPeople.push({ name:'New Person', role:'', available:'40', projects:[{ name:'Project', hours:'' }] }); renderCapacity(); });
+    }
+
+    // ── RISK CALCULATOR ────────────────────────────────────────────
+    var riskRows = [
+      { id:'R-001', description:'', likelihood:3, impact:3 }
+    ];
+
+    function priorityLabel(score) {
+      if (score >= 20) return { text:'Critical', cls:'priority-critical' };
+      if (score >= 10) return { text:'High',     cls:'priority-high' };
+      if (score >= 5)  return { text:'Medium',   cls:'priority-medium' };
+      return                  { text:'Low',      cls:'priority-low' };
+    }
+
+    function renderRisk() {
+      var rows = riskRows.map(function(r, i) {
+        var score = r.likelihood * r.impact;
+        var p = priorityLabel(score);
+        return '<div class="card p-5 mb-4 risk-row-card" data-i="'+i+'">'
+          + '<div class="flex items-center justify-between mb-4">'
+          + '<div style="display:flex;gap:0.5rem;align-items:center;">'
+          + '<input class="calc-input risk-id" data-i="'+i+'" value="'+r.id+'" placeholder="Risk ID" style="width:90px;font-size:0.875rem;font-weight:600;">'
+          + '<input class="calc-input risk-desc" data-i="'+i+'" value="'+r.description+'" placeholder="Describe the risk…" style="min-width:200px;">'
+          + '</div>'
+          + '<button class="remove-btn risk-remove" data-i="'+i+'" title="Remove risk"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button>'
+          + '</div>'
+          + '<div class="grid sm:grid-cols-3 gap-4">'
+          + '<div><label class="field-label" style="font-size:0.8125rem;">Likelihood <span style="color:var(--muted-foreground);font-weight:400;">(1 = rare, 5 = certain)</span></label>'
+          + '<div class="slider-wrap"><input type="range" class="slider risk-likelihood" data-i="'+i+'" min="1" max="5" value="'+r.likelihood+'"><span class="slider-val">'+r.likelihood+'</span></div></div>'
+          + '<div><label class="field-label" style="font-size:0.8125rem;">Impact <span style="color:var(--muted-foreground);font-weight:400;">(1 = minor, 5 = critical)</span></label>'
+          + '<div class="slider-wrap"><input type="range" class="slider risk-impact" data-i="'+i+'" min="1" max="5" value="'+r.impact+'"><span class="slider-val">'+r.impact+'</span></div></div>'
+          + '<div class="flex flex-col justify-center">'
+          + '<div class="result-label mb-1">Risk Score &amp; Priority</div>'
+          + '<div style="display:flex;align-items:baseline;gap:0.625rem;">'
+          + '<span style="font-size:2rem;font-weight:800;color:#0d7377;">'+score+'</span>'
+          + '<span class="'+p.cls+'" style="font-size:1rem;">'+p.text+'</span>'
+          + '</div>'
+          + '<div class="result-label mt-0.5">Score = '+r.likelihood+' × '+r.impact+'</div>'
+          + '</div>'
+          + '</div>'
+          + '</div>';
+      }).join('');
+
+      container.innerHTML = '<div class="fade-in">'
+        + '<div class="flex items-start justify-between flex-wrap gap-3 mb-6">'
+        + '<div><h2 class="text-xl font-bold">Risk Exposure Calculator</h2>'
+        + '<p class="mt-1 text-sm" style="color:var(--muted-foreground);">Score each risk by likelihood and impact to identify priorities. Score = Likelihood × Impact.</p></div>'
+        + '<a class="download-btn" href="sheets/risk-exposure-calculator.xlsx" download>'
+        + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>'
+        + 'Download spreadsheet</a>'
+        + '</div>'
+        + '<div id="risk-rows-container">' + rows + '</div>'
+        + '<button class="add-btn mb-8" id="risk-add">+ Add risk</button>'
+        + '<div>'
+        + '<p class="section-title">Risk Summary</p>'
+        + '<div id="risk-summary" class="grid grid-cols-2 sm:grid-cols-4 gap-3">' + buildRiskSummary() + '</div>'
+        + '</div>'
+        + '</div>';
+
+      bindRiskEvents();
+    }
+
+    function buildRiskSummary() {
+      var counts = { Low:0, Medium:0, High:0, Critical:0 };
+      riskRows.forEach(function(r) { counts[priorityLabel(r.likelihood * r.impact).text]++; });
+      return [
+        { label:'Low',      cls:'priority-low',      bg:'rgba(22,163,74,0.08)',   border:'rgba(22,163,74,0.2)',   count:counts.Low },
+        { label:'Medium',   cls:'priority-medium',   bg:'rgba(217,119,6,0.08)',   border:'rgba(217,119,6,0.2)',   count:counts.Medium },
+        { label:'High',     cls:'priority-high',     bg:'rgba(220,38,38,0.08)',   border:'rgba(220,38,38,0.2)',   count:counts.High },
+        { label:'Critical', cls:'priority-critical', bg:'rgba(124,58,237,0.08)',  border:'rgba(124,58,237,0.2)',  count:counts.Critical },
+      ].map(function(s) {
+        return '<div style="background:'+s.bg+';border:1px solid '+s.border+';border-radius:0.75rem;padding:1rem;text-align:center;">'
+          + '<div style="font-size:2rem;font-weight:800;" class="'+s.cls+'">'+s.count+'</div>'
+          + '<div style="font-size:0.8125rem;margin-top:0.25rem;" class="'+s.cls+'">'+s.label+'</div>'
+          + '</div>';
+      }).join('');
+    }
+
+    function bindRiskEvents() {
+      function refreshSummary() { document.getElementById('risk-summary').innerHTML = buildRiskSummary(); }
+      document.querySelectorAll('.risk-id').forEach(function(inp) { inp.addEventListener('input', function() { riskRows[+inp.dataset.i].id = inp.value; }); });
+      document.querySelectorAll('.risk-desc').forEach(function(inp) { inp.addEventListener('input', function() { riskRows[+inp.dataset.i].description = inp.value; }); });
+      document.querySelectorAll('.risk-likelihood').forEach(function(inp) {
+        inp.addEventListener('input', function() {
+          riskRows[+inp.dataset.i].likelihood = +inp.value;
+          var card = inp.closest('.risk-row-card');
+          var i = +inp.dataset.i;
+          var score = riskRows[i].likelihood * riskRows[i].impact;
+          var p = priorityLabel(score);
+          card.querySelector('.slider-val').textContent = inp.value;
+          card.querySelectorAll('.slider-val')[0].textContent = riskRows[i].likelihood;
+          updateRiskCard(card, i);
+          refreshSummary();
+        });
+      });
+      document.querySelectorAll('.risk-impact').forEach(function(inp) {
+        inp.addEventListener('input', function() {
+          riskRows[+inp.dataset.i].impact = +inp.value;
+          var card = inp.closest('.risk-row-card');
+          card.querySelectorAll('.slider-val')[1].textContent = inp.value;
+          updateRiskCard(card, +inp.dataset.i);
+          refreshSummary();
+        });
+      });
+      document.querySelectorAll('.risk-remove').forEach(function(btn) { btn.addEventListener('click', function() { riskRows.splice(+btn.dataset.i, 1); renderRisk(); }); });
+      var addBtn = document.getElementById('risk-add');
+      if (addBtn) addBtn.addEventListener('click', function() {
+        riskRows.push({ id:'R-0'+String(riskRows.length+1).padStart(2,'0'), description:'', likelihood:1, impact:1 });
+        renderRisk();
+      });
+    }
+
+    function updateRiskCard(card, i) {
+      var r = riskRows[i];
+      var score = r.likelihood * r.impact;
+      var p = priorityLabel(score);
+      var scoreEl = card.querySelector('[style*="font-size:2rem"]');
+      var prioEl  = card.querySelector('[class*="priority-"]');
+      var calcEl  = card.querySelector('.result-label.mt-0\\.5');
+      if (scoreEl) scoreEl.textContent = score;
+      if (prioEl)  { prioEl.textContent = p.text; prioEl.className = p.cls + ' ' + prioEl.className.replace(/priority-\w+/, ''); prioEl.className = p.cls; prioEl.style.fontSize = '1rem'; }
+      // Re-render whole card is simpler for this
+      renderRisk();
+    }
+
+    // ── BREAK-EVEN CALCULATOR ──────────────────────────────────────
+    function renderBreakEven() {
+      container.innerHTML = '<div class="fade-in">'
+        + '<div class="flex items-start justify-between flex-wrap gap-3 mb-6">'
+        + '<div><h2 class="text-xl font-bold">Event Break-Even Calculator</h2>'
+        + '<p class="mt-1 text-sm" style="color:var(--muted-foreground);">Find the minimum ticket sales needed to cover your event costs.</p></div>'
+        + '<a class="download-btn" href="sheets/event-break-even-calculator.xlsx" download>'
+        + '<svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3 16.5v2.25A2.25 2.25 0 005.25 21h13.5A2.25 2.25 0 0021 18.75V16.5M16.5 12L12 16.5m0 0L7.5 12m4.5 4.5V3"/></svg>'
+        + 'Download spreadsheet</a>'
+        + '</div>'
+        + '<div class="grid lg:grid-cols-2 gap-8">'
+        // Inputs
+        + '<div class="card p-6">'
+        + '<p class="section-title">Event Details</p>'
+        + '<div class="flex flex-col gap-5">'
+        + makeField('be-ticket',  'Ticket Price', '€', '50', 'Amount charged per attendee', 'number')
+        + makeField('be-attend',  'Expected Attendance', '', '200', 'Your best estimate of how many people will attend', 'number')
+        + makeField('be-fixed',   'Total Fixed Costs', '€', '4000', 'Venue hire, staff, insurance, equipment - costs that don\'t change with attendance', 'number')
+        + makeField('be-varper',  'Variable Cost per Ticket', '€', '12', 'Catering, materials, etc. - per person', 'number')
+        + '</div>'
+        + '</div>'
+        // Results
+        + '<div>'
+        + '<p class="section-title">Results</p>'
+        + '<div id="be-results" class="flex flex-col gap-3">' + buildBreakEvenResults() + '</div>'
+        + '</div>'
+        + '</div>'
+        // Scenario table
+        + '<div class="mt-8">'
+        + '<p class="section-title">Attendance Scenario Table</p>'
+        + '<div class="card overflow-hidden">'
+        + '<table style="width:100%;border-collapse:collapse;" id="be-table">' + buildScenarioTable() + '</table>'
+        + '</div>'
+        + '</div>'
+        + '</div>';
+
+      ['be-ticket','be-attend','be-fixed','be-varper'].forEach(function(id) {
+        var el = document.getElementById(id);
+        if (el) el.addEventListener('input', function() {
+          document.getElementById('be-results').innerHTML = buildBreakEvenResults();
+          document.getElementById('be-table').innerHTML = buildScenarioTable();
+        });
+      });
+    }
+
+    function makeField(id, label, prefix, defaultVal, hint, type) {
+      return '<div>'
+        + '<label class="field-label" for="' + id + '">' + label + '</label>'
+        + '<div style="position:relative;">'
+        + (prefix ? '<span style="position:absolute;left:0.75rem;top:50%;transform:translateY(-50%);color:var(--muted-foreground);">' + prefix + '</span>' : '')
+        + '<input class="calc-input" id="' + id + '" type="' + (type||'text') + '" min="0" value="' + defaultVal + '" placeholder="' + defaultVal + '"' + (prefix ? ' style="padding-left:1.75rem;"' : '') + '>'
+        + '</div>'
+        + (hint ? '<p class="field-hint">' + hint + '</p>' : '')
+        + '</div>';
+    }
+
+    function beVals() {
+      var t = parseFloat((document.getElementById('be-ticket')  || {value:'50'}).value)  || 0;
+      var a = parseFloat((document.getElementById('be-attend')  || {value:'200'}).value) || 0;
+      var f = parseFloat((document.getElementById('be-fixed')   || {value:'4000'}).value)|| 0;
+      var v = parseFloat((document.getElementById('be-varper')  || {value:'12'}).value)  || 0;
+      return { ticket:t, attend:a, fixed:f, varper:v };
+    }
+
+    function buildBreakEvenResults() {
+      var b = beVals();
+      var contribution = b.ticket - b.varper;
+      var breakEven = contribution > 0 ? Math.ceil(b.fixed / contribution) : null;
+      var revenue   = b.ticket * b.attend;
+      var totalCost = b.fixed + (b.varper * b.attend);
+      var profitLoss = revenue - totalCost;
+      var plClass = profitLoss >= 0 ? 'result-positive' : 'result-negative';
+      var plLabel = profitLoss >= 0 ? 'Profit' : 'Loss';
+
+      return '<div class="result-card"><div class="result-label">Contribution per Ticket</div><div class="result-value">€' + (contribution).toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div><div class="result-label mt-1">Ticket price minus variable cost per person</div></div>'
+        + '<div class="result-card" style="background:linear-gradient(135deg,rgba(13,115,119,0.12),rgba(13,115,119,0.04));border-color:rgba(13,115,119,0.35);">'
+        + '<div class="result-label">Break-Even Attendance</div>'
+        + '<div class="result-value" style="font-size:2rem;">' + (breakEven !== null ? fmtInt(breakEven) + ' tickets' : '-') + '</div>'
+        + (breakEven !== null ? '<div class="result-label mt-1">' + (b.attend >= breakEven ? '✓ Expected attendance exceeds break-even' : '⚠ Expected attendance is below break-even') + '</div>' : '<div class="result-label mt-1">Contribution must be positive</div>')
+        + '</div>'
+        + '<div class="grid grid-cols-3 gap-3">'
+        + '<div class="result-card"><div class="result-label">Revenue</div><div class="result-value" style="font-size:1.125rem;">€' + revenue.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + '<div class="result-card"><div class="result-label">Total Costs</div><div class="result-value" style="font-size:1.125rem;color:#dc2626;">€' + totalCost.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + '<div class="result-card"><div class="result-label">' + plLabel + ' / Loss</div><div class="result-value '+plClass+'" style="font-size:1.125rem;">' + (profitLoss >= 0 ? '+' : '') + '€' + Math.abs(profitLoss).toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</div></div>'
+        + '</div>';
+    }
+
+    function buildScenarioTable() {
+      var b = beVals();
+      var contribution = b.ticket - b.varper;
+      var breakEven = contribution > 0 ? Math.ceil(b.fixed / contribution) : null;
+      var scenarios = [25, 50, 75, 100, 150, 200, 250, 300, 400, 500];
+      var rows = scenarios.map(function(att, i) {
+        var rev  = b.ticket * att;
+        var cost = b.fixed + (b.varper * att);
+        var pl   = rev - cost;
+        var isBreakEven = breakEven !== null && att >= breakEven && (i === 0 || scenarios[i-1] < breakEven);
+        var plClass = pl >= 0 ? 'color:#16a34a;' : 'color:#dc2626;';
+        var rowBg = i % 2 === 0 ? 'background:var(--muted);' : '';
+        return '<tr style="' + rowBg + (isBreakEven ? 'outline:2px solid #0d7377;' : '') + '">'
+          + '<td style="padding:0.5rem 1rem;font-size:0.875rem;">' + att + (isBreakEven ? ' <span style="font-size:0.7rem;background:rgba(13,115,119,0.12);color:#0d7377;padding:0.1rem 0.4rem;border-radius:9999px;font-weight:600;">break-even</span>' : '') + '</td>'
+          + '<td style="padding:0.5rem 1rem;font-size:0.875rem;">€' + rev.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</td>'
+          + '<td style="padding:0.5rem 1rem;font-size:0.875rem;">€' + cost.toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</td>'
+          + '<td style="padding:0.5rem 1rem;font-size:0.875rem;font-weight:600;' + plClass + '">' + (pl >= 0 ? '+' : '') + '€' + Math.abs(pl).toLocaleString('en-IE',{minimumFractionDigits:2,maximumFractionDigits:2}) + '</td>'
+          + '</tr>';
+      }).join('');
+
+      return '<thead><tr style="background:var(--card);">'
+        + '<th style="padding:0.625rem 1rem;text-align:left;font-size:0.75rem;font-weight:600;color:var(--muted-foreground);border-bottom:1px solid var(--border);">Attendance</th>'
+        + '<th style="padding:0.625rem 1rem;text-align:left;font-size:0.75rem;font-weight:600;color:var(--muted-foreground);border-bottom:1px solid var(--border);">Revenue</th>'
+        + '<th style="padding:0.625rem 1rem;text-align:left;font-size:0.75rem;font-weight:600;color:var(--muted-foreground);border-bottom:1px solid var(--border);">Total Costs</th>'
+        + '<th style="padding:0.625rem 1rem;text-align:left;font-size:0.75rem;font-weight:600;color:var(--muted-foreground);border-bottom:1px solid var(--border);">Profit / Loss</th>'
+        + '</tr></thead><tbody>' + rows + '</tbody>';
+    }
+
+    // ── Main router ────────────────────────────────────────────────
+    sel.addEventListener('change', function() {
+      var v = sel.value;
+      if (!v) {
+        container.innerHTML = '';
+        placeholder.style.display = '';
+        return;
+      }
+      placeholder.style.display = 'none';
+      if (v === 'budget')    renderBudget();
+      if (v === 'capacity')  renderCapacity();
+      if (v === 'risk')      renderRisk();
+      if (v === 'breakeven') renderBreakEven();
+    });
+
+    // ── Theme toggle ───────────────────────────────────────────────
+    var toggleBtn = document.getElementById('theme-toggle');
+    var sunIcon  = document.getElementById('icon-sun');
+    var moonIcon = document.getElementById('icon-moon');
+    function applyTheme(dark) {
+      document.documentElement.classList.toggle('dark', dark);
+      localStorage.setItem('theme', dark ? 'dark' : 'light');
+      sunIcon.classList.toggle('hidden', !dark);
+      moonIcon.classList.toggle('hidden', dark);
+    }
+    applyTheme(localStorage.getItem('theme') === 'dark');
+    toggleBtn.addEventListener('click', function() { applyTheme(!document.documentElement.classList.contains('dark')); });
+
+  })();
+  </script>
+
+</body>
+</html>

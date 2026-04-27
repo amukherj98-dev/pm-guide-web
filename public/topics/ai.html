@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="en" class="scroll-smooth">
+<head>
+  <meta charset="UTF-8"><meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI in Project Management | Project Management Made Practical</title>
+  <meta name="description" content="How Irish charities and small businesses can use AI tools in project management - safely, practically, and with clear rules about personal data.">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <script>tailwind.config={darkMode:'class',theme:{extend:{fontFamily:{sans:['Inter','system-ui','sans-serif']},colors:{primary:{DEFAULT:'#0d7377',foreground:'#ffffff'},background:'var(--background)',foreground:'var(--foreground)',card:'var(--card)',muted:'var(--muted)','muted-foreground':'var(--muted-foreground)',border:'var(--border)'}}}};</script>
+  <style>
+    :root{--background:#faf9f7;--foreground:#1a1a2e;--card:#ffffff;--muted:#f0efed;--muted-foreground:#64748b;--border:#e2e1df;}
+    .dark{--background:#0a0a0a;--foreground:#fafafa;--card:#18181b;--muted:#27272a;--muted-foreground:#a1a1aa;--border:#3f3f46;}
+    body{font-family:'Inter',system-ui,sans-serif;background-color:var(--background);color:var(--foreground);}
+    .btn-primary{background-color:#0d7377;color:white;padding:0.625rem 1.25rem;border-radius:0.5rem;font-weight:500;transition:all 0.2s;display:inline-block;}.btn-primary:hover{background-color:#0b6264;}
+    .card{background-color:var(--card);border:1px solid var(--border);border-radius:1rem;}
+    #topics-panel{display:none;position:absolute;top:calc(100% + 8px);left:0;background:var(--card);border:1px solid var(--border);border-radius:0.75rem;box-shadow:0 20px 40px -8px rgba(0,0,0,0.15);z-index:100;width:440px;padding:0.75rem;grid-template-columns:1fr 1fr;gap:0.25rem;}
+    #topics-panel.open{display:grid;}
+    .topics-link{display:flex;align-items:center;padding:0.6rem 0.875rem;border-radius:0.5rem;color:var(--foreground);text-decoration:none;font-size:0.875rem;font-weight:500;transition:background-color 0.15s,color 0.15s;white-space:nowrap;}
+    .topics-link:hover{background-color:var(--muted);color:#0d7377;}
+    #topics-btn[aria-expanded="true"] .topics-chevron{transform:rotate(180deg);}.topics-chevron{transition:transform 0.2s;}
+    .prose-content h2{font-size:1.5rem;font-weight:700;margin-top:2rem;margin-bottom:0.75rem;}
+    .prose-content h3{font-size:1.125rem;font-weight:600;margin-top:1.5rem;margin-bottom:0.5rem;}
+    .prose-content p{line-height:1.75;margin-bottom:1rem;color:var(--muted-foreground);}
+    .prose-content ul{list-style:disc;padding-left:1.5rem;margin-bottom:1rem;}
+    .prose-content li{line-height:1.75;margin-bottom:0.25rem;color:var(--muted-foreground);}
+  </style>
+</head>
+<body class="min-h-screen">
+  <header class="sticky top-0 z-50 w-full border-b bg-[var(--card)]/95 backdrop-blur" style="border-color:var(--border);">
+    <nav class="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 lg:px-8">
+      <div class="flex lg:flex-1"><a href="../index.html" class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1566341013452-946caa457784?w=80&h=80&fit=crop&q=80" alt="PM" class="h-10 w-10 rounded-lg object-cover"><div class="hidden sm:block"><span class="text-lg font-semibold">Project Management</span><span class="block text-xs text-[var(--muted-foreground)]">Made Practical</span></div></a></div>
+      <div class="flex lg:hidden"><button type="button" id="mobile-menu-btn" class="inline-flex items-center justify-center rounded-md p-2.5"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M3.75 6.75h16.5M3.75 12h16.5m-16.5 5.25h16.5"/></svg></button></div>
+      <div class="hidden lg:flex lg:items-center lg:gap-x-8">
+        <a href="../index.html" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Home</a>
+        <div class="relative"><button id="topics-btn" aria-haspopup="true" aria-expanded="false" aria-controls="topics-panel" class="flex items-center gap-1 text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Topics<svg class="topics-chevron h-4 w-4 ml-1" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M19.5 8.25l-7.5 7.5-7.5-7.5"/></svg></button><div id="topics-panel" role="menu"><a href="risk.html" class="topics-link">Risk Management</a><a href="leadership.html" class="topics-link">Leadership</a><a href="teams.html" class="topics-link">Teams</a><a href="ethics.html" class="topics-link">Ethics</a><a href="sustainability.html" class="topics-link">Sustainability</a><a href="governance.html" class="topics-link">Governance</a><a href="strategy.html" class="topics-link">Strategy</a><a href="planning.html" class="topics-link">Planning</a><a href="implementation.html" class="topics-link">Implementation</a><a href="stakeholders.html" class="topics-link">Stakeholders</a><a href="methodologies.html" class="topics-link">Methodologies</a><a href="ai.html" class="topics-link">AI in Projects</a></div></div>
+        <a href="../index.html#resources" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">Resources</a>
+        <a href="../index.html#values" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">ECCSR Framework</a>
+        <a href="../index.html#references" class="text-sm font-medium text-[var(--muted-foreground)] hover:text-[var(--foreground)] transition-colors">References</a>
+      </div>
+      <div class="hidden lg:flex lg:flex-1 lg:items-center lg:justify-end lg:gap-4"><button id="theme-toggle" class="p-2 rounded-lg hover:bg-[var(--muted)] transition-colors"><svg id="sun-icon" class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M12 3v2.25m6.364.386l-1.591 1.591M21 12h-2.25m-.386 6.364l-1.591-1.591M12 18.75V21m-4.773-4.227l-1.591 1.591M5.25 12H3m4.227-4.773L5.636 5.636M15.75 12a3.75 3.75 0 11-7.5 0 3.75 3.75 0 017.5 0z"/></svg><svg id="moon-icon" class="h-5 w-5 hidden" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M21.752 15.002A9.718 9.718 0 0118 15.75c-5.385 0-9.75-4.365-9.75-9.75 0-1.33.266-2.597.748-3.752A9.753 9.753 0 003 11.25C3 16.635 7.365 21 12.75 21a9.753 9.753 0 009.002-5.998z"/></svg></button><a href="../index.html#get-started" class="btn-primary">Get Started</a></div>
+    </nav>
+    <div id="mobile-menu" class="hidden lg:hidden border-t px-6 py-4 space-y-3" style="border-color:var(--border);"><a href="../index.html" class="block text-sm font-medium py-2">Home</a><a href="ai.html" class="block text-sm py-1 text-[var(--muted-foreground)]">AI in Projects</a><a href="methodologies.html" class="block text-sm py-1 text-[var(--muted-foreground)]">Methodologies</a></div>
+  </header>
+
+  <main>
+    <div class="bg-[var(--card)] border-b" style="border-color:var(--border);"><div class="mx-auto max-w-7xl px-6 py-3 lg:px-8"><nav class="flex items-center gap-2 text-sm text-[var(--muted-foreground)]"><a href="../index.html" class="hover:text-[var(--foreground)]">Home</a><span>/</span><span class="text-[var(--foreground)] font-medium">AI in Project Management</span></nav></div></div>
+
+    <section class="py-16 lg:py-20 bg-[var(--background)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-3xl">
+      <div class="inline-flex items-center rounded-full px-3 py-1 text-sm font-medium mb-4" style="background-color:rgba(13,115,119,0.1);color:#0d7377;">Topic Area</div>
+      <h1 class="text-4xl font-bold tracking-tight sm:text-5xl">AI in Project Management</h1>
+      <p class="mt-6 text-xl leading-relaxed text-[var(--muted-foreground)]">AI doesn't replace methodologies - it supercharges them. For a small Irish charity or business, AI is the most consequential workplace technology since email, and possibly more so. A four-person team that uses AI well can produce more, and to higher standards, than a four-person team that doesn't. The cost is low. The gap is widening.</p>
+    </div></div></section>
+
+    <section class="py-12 lg:py-16 bg-[var(--card)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><div class="mx-auto max-w-3xl prose-content">
+      <h2>Three Patterns of AI Use in Project Work</h2>
+      <p>PMI's research (2023) identifies three patterns of GenAI use in project management, organised by complexity and how much human intervention each requires:</p>
+      <ul>
+        <li><strong>Automate</strong> - low complexity, low intervention. AI does it; you check it. Examples: generating reports, summarising meetings, performing calculations.</li>
+        <li><strong>Assist</strong> - medium complexity, some intervention. AI drafts; you shape. Examples: drafting communications, first-pass analyses, research synthesis.</li>
+        <li><strong>Augment</strong> - high complexity, high intervention. AI helps you think; you decide. Examples: predictive risk analysis, scenario modelling, strategic decision support.</li>
+      </ul>
+      <p>Houghton's framing of the broader shift: AI takes the science, the human takes the art. The Iron Triangle (scope, time, cost) is increasingly managed by AI. The Human Triangle (leadership, stakeholder negotiation, ethical judgement) is still managed by people - and is probably more important than ever.</p>
+
+      <h2>What AI Can Do For You Today</h2>
+      <p>For most small Irish organisations, the best place to start is firmly in the Automate and Assist zones. Specific high-value use cases:</p>
+      <ul>
+        <li><strong>Drafting</strong> - project charters, risk registers, board papers, funder reports, communications, social media, blog posts</li>
+        <li><strong>Summarising</strong> - long meetings, dense funder documents, reports, research papers</li>
+        <li><strong>Translating</strong> - into plain English, into Irish, between technical and lay registers</li>
+        <li><strong>Brainstorming</strong> - lists of risks, stakeholders, ideas to consider</li>
+        <li><strong>Reformatting</strong> - turning notes into a structured charter; turning a charter into a presentation</li>
+        <li><strong>Analysing</strong> - spotting patterns in feedback, theming open-text survey responses</li>
+      </ul>
+
+      <h2>Five Practical Prompts You Can Use Today</h2>
+      <ol>
+        <li>"I'm planning a 6-month community-engagement project funded by Pobal. List the top 10 risks I should consider, organised by Risk Breakdown Structure category (financial, operational, legal, reputational, H&amp;S, technology, stakeholder)."</li>
+        <li>"Here are my notes from yesterday's project team meeting [paste]. Produce a structured summary with: decisions made, actions assigned (with owner and date), open questions."</li>
+        <li>"Draft a one-page project charter for this project: [project description]. Use these headings: Sponsor, PM, Objectives, Scope (in/out), Key Deliverables, Budget, Stakeholders, Assumptions, Risks. Plain English. Aimed at a charity board."</li>
+        <li>"I have to write a quarterly funder report. Here's what we said we'd do [paste], here's what actually happened [paste]. Help me write a 1-page report that's honest about variances but professionally framed."</li>
+        <li>"Give me 5 questions I should ask each of our key stakeholders [list them] in a discovery interview. Each set tailored to that stakeholder's perspective and likely interests."</li>
+      </ol>
+
+      <h2>The Hard Rules - Non-Negotiable</h2>
+      <h3>Never put personal data into a public AI tool</h3>
+      <p>This is the rule that matters most for charities. Public AI tools (free tiers of ChatGPT, Claude, Gemini, etc.) typically retain inputs and may use them to train future models. Beneficiary names, contact details, case notes, and sensitive personal information must never be entered into these tools. GDPR applies here. "I pasted the case notes into ChatGPT to summarise them" is a data breach, and increasingly understood as such by the Data Protection Commission.</p>
+      <p>If you genuinely need AI on personal data, use a tool with enterprise-grade contracts and a Data Processing Agreement (Microsoft Copilot for M365, ChatGPT Enterprise, Claude for Work).</p>
+      <h3>Always review</h3>
+      <p>AI generates plausible-sounding text that is sometimes wrong - invented citations, fabricated statistics, confident-but-incorrect facts (called hallucinations). For a charity, hallucination in a funder report or board paper is a reputational risk. Treat AI output the way you would treat a willing, fast, slightly unreliable junior colleague: everything is a draft until a human has reviewed it.</p>
+      <h3>Disclose where it matters</h3>
+      <p>For internal drafts and brainstorming, no need to disclose. For public-facing communications and formal reports, say if AI was substantially involved. For academic or evaluation outputs, disclose per the publisher's policy. Do not claim AI work as your own when the writing itself is what is being judged (e.g. funder applications where the writing demonstrates capability).</p>
+
+      <h2>A Ten-Minute Weekly Team Habit</h2>
+      <p>One person each week picks a real project management task they did manually that week. They redo it with AI and compare - faster? better? worse? Five-minute share at the next team meeting. Three months of this and your team has organic, real-world AI fluency without buying training.</p>
+
+      <h2>Common Pitfalls</h2>
+      <ul>
+        <li>Believing the output without checking - hallucinations are common and sometimes elegant</li>
+        <li>Personal data in public tools - a live GDPR risk; get this rule into team norms now</li>
+        <li>Outsourcing judgement - AI can draft a stakeholder analysis; it cannot tell you whether to trust a particular funder's intentions</li>
+        <li>Tool sprawl - picking ten AI tools and using none well; pick one, learn it deeply</li>
+        <li>Underestimating it - "AI is not for us." A small Irish charity that ignores AI will be working much harder than equivalents who did not, within five years</li>
+      </ul>
+    </div></div></section>
+
+    <section class="py-12 lg:py-16 bg-[var(--background)]"><div class="mx-auto max-w-7xl px-6 lg:px-8">
+      <h2 class="text-2xl font-bold mb-8">Key Concepts</h2>
+      <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Three Modes</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">Automate (AI does, you check), Assist (AI drafts, you shape), Augment (AI helps you think, you decide). Start in Automate and Assist; move to Augment as confidence grows.</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M9 12.75L11.25 15 15 9.75m-3-7.036A11.959 11.959 0 013.598 6 11.99 11.99 0 003 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">GDPR and AI</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">Never enter beneficiary names, case notes, or sensitive personal data into a public AI tool. This is a data breach. For personal data, use enterprise tools with a Data Processing Agreement.</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v3.75m-9.303 3.376c-.866 1.5.217 3.374 1.948 3.374h14.71c1.73 0 2.813-1.874 1.948-3.374L13.949 3.378c-.866-1.5-3.032-1.5-3.898 0L2.697 16.126zM12 15.75h.007v.008H12v-.008z"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">Hallucination</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">AI generates plausible but sometimes wrong text: invented citations, fabricated statistics, confident-but-incorrect facts. Treat every AI output as a draft until a human has reviewed it.</p>
+        </div>
+        <div class="card p-6">
+          <div class="h-10 w-10 rounded-lg flex items-center justify-center mb-4" style="background-color: rgba(13,115,119,0.1);">
+            <svg class="h-5 w-5" style="color: #0d7377;" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0l3.181 3.183a8.25 8.25 0 0013.803-3.7M4.031 9.865a8.25 8.25 0 0113.803-3.7l3.181 3.182m0-4.991v4.99"/>
+            </svg>
+          </div>
+          <h3 class="text-lg font-semibold mb-2">AI Fluency Habit</h3>
+          <p class="text-sm text-[var(--muted-foreground)] leading-relaxed">One person per week redoes a manual task with AI and shares the comparison at the next meeting. Three months builds organic team fluency without buying training.</p>
+        </div>
+      </div>
+    </div></section>
+
+    <section class="py-12 bg-[var(--card)]"><div class="mx-auto max-w-7xl px-6 lg:px-8"><h2 class="text-xl font-semibold mb-6">Related Topics</h2><div class="flex flex-wrap gap-3"><a href="methodologies.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Methodologies</a><a href="risk.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Risk Management</a><a href="planning.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Planning</a><a href="ethics.html" class="inline-flex items-center rounded-full border px-4 py-2 text-sm font-medium hover:bg-[var(--muted)] transition-colors" style="border-color:var(--border);">Ethics</a></div></div></section>
+  </main>
+
+  <footer class="border-t bg-[var(--card)] mt-20" style="border-color:var(--border);"><div class="mx-auto max-w-7xl px-6 py-12 lg:px-8"><div class="flex flex-col gap-4 md:flex-row md:items-center md:justify-between"><a href="../index.html" class="flex items-center gap-3"><img src="https://images.unsplash.com/photo-1566341013452-946caa457784?w=80&h=80&fit=crop&q=80" alt="PM" class="h-10 w-10 rounded-lg object-cover"><span class="text-lg font-semibold">Project Management Made Practical</span></a><p class="text-xs text-[var(--muted-foreground)]">&copy; 2026 Project Management Made Practical.</p></div></div></footer>
+  <script>
+    function setTheme(t){if(t==='dark'){document.documentElement.classList.add('dark');localStorage.setItem('theme','dark');document.getElementById('sun-icon').classList.add('hidden');document.getElementById('moon-icon').classList.remove('hidden');}else{document.documentElement.classList.remove('dark');localStorage.setItem('theme','light');document.getElementById('sun-icon').classList.remove('hidden');document.getElementById('moon-icon').classList.add('hidden');}}
+    setTheme(localStorage.getItem('theme')||'light');
+    document.getElementById('theme-toggle').addEventListener('click',function(){setTheme(document.documentElement.classList.contains('dark')?'light':'dark');});
+    document.getElementById('mobile-menu-btn').addEventListener('click',function(){document.getElementById('mobile-menu').classList.toggle('hidden');});
+    (function(){var btn=document.getElementById('topics-btn'),panel=document.getElementById('topics-panel');function close(){panel.classList.remove('open');btn.setAttribute('aria-expanded','false');}btn.addEventListener('click',function(e){e.stopPropagation();panel.classList.contains('open')?close():(panel.classList.add('open'),btn.setAttribute('aria-expanded','true'));});document.addEventListener('click',function(e){if(!panel.contains(e.target)&&e.target!==btn)close();});document.addEventListener('keydown',function(e){if(e.key==='Escape')close();});})();
+  </script>
+  <button id="chatbot-btn" class="fixed bottom-6 right-6 z-50 flex h-14 w-14 items-center justify-center rounded-full bg-primary text-white shadow-lg transition-all hover:scale-105 hover:shadow-xl"><svg class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M8.625 12a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H8.25m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0H12m4.125 0a.375.375 0 11-.75 0 .375.375 0 01.75 0zm0 0h-.375M21 12c0 4.556-4.03 8.25-9 8.25a9.764 9.764 0 01-2.555-.337A5.972 5.972 0 015.41 20.97a5.969 5.969 0 01-.474-.065 4.48 4.48 0 00.978-2.025c.09-.457-.133-.901-.467-1.226C3.93 16.178 3 14.189 3 12c0-4.556 4.03-8.25 9-8.25s9 3.694 9 8.25z"/></svg></button>
+  <div id="chatbot-panel" class="fixed bottom-6 right-6 z-50 w-full max-w-md transition-all duration-300 pointer-events-none translate-y-4 opacity-0"><div class="flex h-[500px] flex-col overflow-hidden rounded-2xl border bg-[var(--card)] shadow-2xl" style="border-color:var(--border);"><div class="flex items-center justify-between border-b bg-primary px-4 py-3" style="border-color:var(--border);"><div class="flex items-center gap-3"><div class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10"><svg class="h-5 w-5 text-white" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M9.813 15.904L9 18.75l-.813-2.846a4.5 4.5 0 00-3.09-3.09L2.25 12l2.846-.813a4.5 4.5 0 003.09-3.09L9 5.25l.813 2.846a4.5 4.5 0 003.09 3.09L15.75 12l-2.846.813a4.5 4.5 0 00-3.09 3.09zM18.259 8.715L18 9.75l-.259-1.035a3.375 3.375 0 00-2.455-2.456L14.25 6l1.036-.259a3.375 3.375 0 002.455-2.456L18 2.25l.259 1.035a3.375 3.375 0 002.456 2.456L21.75 6l-1.035.259a3.375 3.375 0 00-2.456 2.456zM16.894 20.567L16.5 21.75l-.394-1.183a2.25 2.25 0 00-1.423-1.423L13.5 18.75l1.183-.394a2.25 2.25 0 001.423-1.423l.394-1.183.394 1.183a2.25 2.25 0 001.423 1.423l1.183.394-1.183.394a2.25 2.25 0 00-1.423 1.423z"/></svg></div><div><p class="font-semibold text-white">Guide Assistant</p><p class="text-xs text-white/70">Here to help you navigate</p></div></div><button id="close-chatbot" class="rounded-lg p-2 text-white/70 transition-colors hover:bg-white/10 hover:text-white"><svg class="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg></button></div><div id="chat-messages" class="flex-1 overflow-y-auto p-4 space-y-4"><div class="flex justify-start"><div class="max-w-[85%] rounded-2xl px-4 py-2.5 bg-[var(--muted)]"><p class="text-sm leading-relaxed">Hello! I can help you navigate to any topic or ECCSR page. Just ask!</p></div></div></div><div class="border-t p-4" style="border-color:var(--border);"><div class="flex items-center gap-2"><input type="text" id="chat-input" placeholder="Ask about a topic..." class="flex-1 rounded-xl border bg-[var(--background)] px-4 py-2.5 text-sm placeholder:text-[var(--muted-foreground)] focus:border-primary focus:outline-none focus:ring-1 focus:ring-primary" style="border-color:var(--border);"><button id="send-btn" class="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-xl bg-primary text-white"><svg class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5"/></svg></button></div></div></div></div>
+  <script>(function(){var cb=document.getElementById('chatbot-btn'),cp=document.getElementById('chatbot-panel'),cc=document.getElementById('close-chatbot'),ci=document.getElementById('chat-input'),sb=document.getElementById('send-btn'),cm=document.getElementById('chat-messages'),pn=null;var T=[{name:'Risk Management',kw:['risk'],url:'../topics/risk.html'},{name:'Leadership',kw:['leadership','leader'],url:'../topics/leadership.html'},{name:'Teams',kw:['team','teams'],url:'../topics/teams.html'},{name:'Ethics',kw:['ethics'],url:'../topics/ethics.html'},{name:'Sustainability',kw:['sustainab'],url:'../topics/sustainability.html'},{name:'Governance',kw:['governance','govern'],url:'../topics/governance.html'},{name:'Strategy',kw:['strateg'],url:'../topics/strategy.html'},{name:'Planning',kw:['planning','plan'],url:'../topics/planning.html'},{name:'Implementation',kw:['implement'],url:'../topics/implementation.html'},{name:'Stakeholders',kw:['stakeholder'],url:'../topics/stakeholders.html'},{name:'Methodologies',kw:['methodolog'],url:'../topics/methodologies.html'},{name:'AI in Projects',kw:['ai in','artificial intelligence'],url:'../topics/ai.html'},{name:'Ethical (ECCSR)',kw:['eccsr','ethical'],url:'../eccsr/ethical.html'},{name:'Collaboration (ECCSR)',kw:['collaboration'],url:'../eccsr/collaboration.html'},{name:'Creating Value (ECCSR)',kw:['creating value','creating'],url:'../eccsr/creating.html'},{name:'Sustainable (ECCSR)',kw:['sustainable'],url:'../eccsr/sustainable.html'},{name:'Results (ECCSR)',kw:['results'],url:'../eccsr/results.html'}];function dt(m){var l=m.toLowerCase();for(var t of T){if(t.kw.some(function(k){return l.includes(k);}))return t;}return null;}function af(m){return /^\s*(yes|yeah|yep|yup|sure|ok|okay|go ahead|absolutely|please)\s*$/i.test(m);}function ng(m){return /^\s*(no|nope|nah|cancel|never mind|nevermind)\s*$/i.test(m);}function am(c,u){var d=document.createElement('div');d.className='flex '+(u?'justify-end':'justify-start');d.innerHTML='<div class="max-w-[85%] rounded-2xl px-4 py-2.5 '+(u?'bg-primary text-white':'bg-[var(--muted)]')+'"><p class="text-sm leading-relaxed">'+c+'</p></div>';cm.appendChild(d);cm.scrollTop=cm.scrollHeight;}function anp(t){var d=document.createElement('div');d.className='flex justify-start';d.innerHTML='<div class="max-w-[85%] rounded-2xl px-4 py-3 bg-[var(--muted)]"><p class="text-sm leading-relaxed mb-2">Would you like to go to the <strong>'+t.name+'</strong> page?</p><div class="flex gap-2"><button class="ny px-4 py-1.5 text-xs font-semibold bg-primary text-white rounded-lg hover:opacity-90">Yes</button><button class="nn px-4 py-1.5 text-xs font-semibold bg-[var(--border)] text-[var(--foreground)] rounded-lg hover:opacity-80">No</button></div></div>';d.querySelector('.ny').addEventListener('click',function(){am('Yes',true);pn=null;setTimeout(function(){window.location.href=t.url;},300);});d.querySelector('.nn').addEventListener('click',function(){am('No',true);pn=null;setTimeout(function(){am('No problem! Feel free to ask about any other topic.',false);},400);});cm.appendChild(d);cm.scrollTop=cm.scrollHeight;}function hm(m){if(pn){if(af(m)){var u=pn.url;pn=null;setTimeout(function(){window.location.href=u;},300);return;}if(ng(m)){pn=null;setTimeout(function(){am('No problem! Feel free to ask about any other topic.',false);},400);return;}}var t=dt(m);if(t){pn=t;setTimeout(function(){anp(t);},400);return;}setTimeout(function(){am('I can help you navigate to any topic or ECCSR page. Try asking about Risk Management, Leadership, Planning, and more.',false);},400);}cb.addEventListener('click',function(){cb.classList.add('scale-0','opacity-0');cp.classList.remove('pointer-events-none','translate-y-4','opacity-0');cp.classList.add('pointer-events-auto','translate-y-0','opacity-100');});cc.addEventListener('click',function(){cb.classList.remove('scale-0','opacity-0');cp.classList.add('pointer-events-none','translate-y-4','opacity-0');cp.classList.remove('pointer-events-auto','translate-y-0','opacity-100');});sb.addEventListener('click',function(){var m=ci.value.trim();if(m){am(m,true);ci.value='';hm(m);}});ci.addEventListener('keydown',function(e){if(e.key==='Enter'&&!e.shiftKey){e.preventDefault();sb.click();}});})();</script>
+</body>
+</html>
